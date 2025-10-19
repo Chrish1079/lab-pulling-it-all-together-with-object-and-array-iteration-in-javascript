@@ -114,3 +114,88 @@ function gameObject() {
         },
     };
 }
+const data = gameObject();
+
+function allTeams() {
+  return [data.home, data.away]
+}
+// [{..home team object}, {...away team object}]
+
+function findTeam(teamName) {
+  return allTeams().find(team => team.teamName === teamName)
+}
+
+function allPlayersEntries() {
+  return allTeams().flatMap(team => Object.entries(team.players))
+}
+// [['player name', {...player stats}], []]
+
+function findPlayer(playerName) {
+  return allPlayersEntries().find(([name]) => name === playerName);
+}
+// returns ['player name', {...player stats}]
+
+// numPointsScored(playerName): takes a player’s name and returns their points scored.
+// shoeSize(playerName): Takes a player’s name as input and returns their shoe size.
+// teamColors(teamName): Takes a team name as input and returns an array of the team’s colors.
+// teamNames(): Returns an array of both team names.
+// playerNumbers(teamName): Takes a team name as input and returns an array of all players’ jersey numbers on that team.
+// playerStats(playerName): Takes a player’s name as input and returns an object with all stats for that player.
+// bigShoeRebounds(): Returns the number of rebounds for the player with the largest shoe size.
+
+// Steps:
+// Identify the player with the largest shoe size.
+// Return that player’s rebounds.
+function numPointsScored(playerName) {
+  const player = findPlayer(playerName);
+  return player[1].points;
+}
+
+function shoeSize(playerName) {
+  const player = findPlayer(playerName);
+  return player[1].shoe;
+}
+
+function teamColors(teamName) {
+  return findTeam(teamName).colors;
+}
+
+function teamNames() {
+  return allTeams().map(team => team.teamName);
+}
+
+function playerNumbers(teamName) {
+  const team = findTeam(teamName);
+  return Object.values(team.players).map(player => player.number);
+}
+
+function playerStats(playerName) {
+  const player = findPlayer(playerName);
+  return player[1];
+}
+
+function bigShoeRebounds() {
+  const dataObject = gameObject();
+  let biggestShoeSize = 0;
+  let reboundsAtMax = 0;
+
+  for (const team in dataObject) {
+    const players = dataObject[team].players;
+    for (const player in players) {
+      const stats = players[player];
+      if (stats.shoe > biggestShoeSize) {
+        biggestShoeSize = stats.shoe;
+        reboundsAtMax = stats.rebounds;
+      }
+    }
+  }
+  return reboundsAtMax;
+
+}
+console.log(numPointsScored("Ben Gordon"))
+
+console.log(allPlayersEntries())
+
+console.log(teamColors("Charlotte Hornets"))
+console.log(playerNumbers("Charlotte Hornets"))
+console.log(bigShoeRebounds())
